@@ -136,11 +136,8 @@ if (window.FileReader) {
 }
 
 async function droppedImage() {
-    //e.preventDefault();
-    // var dt = e.dataTransfer;
-    // var files = dt.files;
-    
     let url = 'https://boiling-hollows-10781.herokuapp.com/';
+   
     //let url = 'http://localhost:3000/';
     let response = await fetch(url);
 
@@ -152,7 +149,8 @@ async function droppedImage() {
             var imgel = document.createElement("img");
             //img.file = file;
             imgel.src = img;
-            document.body.appendChild(imgel);
+            //console.log($('#field'))
+            $('#field')[0].appendChild(imgel);
 
             $(imgel).attr("draggable", "false");
 
@@ -187,6 +185,45 @@ async function droppedImage() {
     // }
 
     return false;
+}
+
+const getCollage = () => {
+    alert('click')
+    // const myField = document.getElementById("field");
+    // const canvas = document.createElement("canvas");
+
+    // // scale the canvas accordingly
+    // canvas.width = myField.width;
+    // canvas.height = myField.height;
+    // // draw the video at that frame
+    // canvas
+    //     .getContext("2d")
+    //     .drawImage(myField, 0, 0, canvas.width, canvas.height);
+    // // convert it to a usable data URL
+    // const dataURL = canvas.toDataURL();
+    // console.log(dataURL)
+
+    // $(".toolbar")[0].hidden = true;
+    // var context = $("canvas")[0].getContext("2d");
+    // console.log(context)
+    html2canvas(document.getElementsByTagName("body"), {
+        onrendered: function (canvas) {
+            var myImage = canvas.toDataURL("image/png");
+            //create your own dialog with warning before saving file
+            //beforeDownloadReadMessage();
+            //Then download file
+            console.log(myImage)
+            var img = $("<img />").attr('src', myImage)
+                .on('load', function () {
+                    if (!this.complete || typeof this.naturalWidth == "undefined" || this.naturalWidth == 0) {
+                        alert('broken image!');
+                    } else {
+                        $("#field").append(img);
+                    }
+                });
+            //downloadURI("data:" + myImage, "yourImage.png");
+        }
+    });
 }
 
 Function.prototype.bindToEventHandler = function bindToEventHandler() {
