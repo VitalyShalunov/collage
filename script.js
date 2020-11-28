@@ -188,40 +188,22 @@ async function droppedImage() {
 }
 
 const getCollage = () => {
-    alert('click')
-    // const myField = document.getElementById("field");
-    // const canvas = document.createElement("canvas");
-
-    // // scale the canvas accordingly
-    // canvas.width = myField.width;
-    // canvas.height = myField.height;
-    // // draw the video at that frame
-    // canvas
-    //     .getContext("2d")
-    //     .drawImage(myField, 0, 0, canvas.width, canvas.height);
-    // // convert it to a usable data URL
-    // const dataURL = canvas.toDataURL();
-    // console.log(dataURL)
-
-    // $(".toolbar")[0].hidden = true;
-    // var context = $("canvas")[0].getContext("2d");
-    // console.log(context)
+    console.log($('#slider'))
+    $('button')[0].hidden = true;
+    $('.toolbar')[0].hidden = true;
+    $('#slider')[0].hidden = true;
+    
     html2canvas(document.getElementsByTagName("body"), {
         onrendered: function (canvas) {
             var myImage = canvas.toDataURL("image/png");
-            //create your own dialog with warning before saving file
-            //beforeDownloadReadMessage();
-            //Then download file
-            console.log(myImage)
-            var img = $("<img />").attr('src', myImage)
-                .on('load', function () {
-                    if (!this.complete || typeof this.naturalWidth == "undefined" || this.naturalWidth == 0) {
-                        alert('broken image!');
-                    } else {
-                        $("#field").append(img);
-                    }
-                });
-            //downloadURI("data:" + myImage, "yourImage.png");
+            const debugBase64 = (base64URL) => {
+                var win = window.open();
+                win.document.write('<iframe src="' + base64URL  + '" onload="downloadComplete() frameborder="0" style="border:0; top:0px; left:0px; bottom:0px; right:0px; width:100%; height:100%;" allowfullscreen></iframe>');
+            }
+            debugBase64(myImage)
+            $('button')[0].hidden = false;
+            $('.toolbar')[0].hidden = false;
+            $('#slider')[0].hidden = false;
         }
     });
 }
