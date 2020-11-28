@@ -17,10 +17,10 @@ $(window).load(function () {
     $("img").mousedown(startDragging);
 
     // attach the mousemove event to the body
-    $("body").mousemove(whileDragging);
+    $("#field").mousemove(whileDragging);
 
     // attach the mouseup event to the body
-    $("body").mouseup(doneDragging);
+    $("#field").mouseup(doneDragging);
 
     // attach the onchange event to the dropdown toolchooser
     $("#toolchooser").change(changeMode);
@@ -30,6 +30,10 @@ $(window).load(function () {
 // start dragging will always fire, then while dragging, and finally done dragging on mouse up
 
 function startDragging(e) {
+    if (e && e.currentTarget && e.currentTarget.className === "tabElement") {
+        return;
+    }
+
     // set this image as the current one to be dragged
     currentlyDragging = $(this);
 
@@ -149,7 +153,7 @@ async function droppedImage() {
             var imgel = document.createElement("img");
             //img.file = file;
             imgel.src = img;
-            //console.log($('#field'))
+            imgel.className = 'imgElement';
             $('#field')[0].appendChild(imgel);
 
             $(imgel).attr("draggable", "false");
@@ -198,7 +202,7 @@ const getCollage = () => {
             var myImage = canvas.toDataURL("image/png");
             const debugBase64 = (base64URL) => {
                 var win = window.open();
-                win.document.write('<iframe src="' + base64URL  + '" onload="downloadComplete() frameborder="0" style="border:0; top:0px; left:0px; bottom:0px; right:0px; width:100%; height:100%;" allowfullscreen></iframe>');
+                win.document.write('<iframe src="' + base64URL  + '" frameborder="0" style="border:0; top:0px; left:0px; bottom:0px; right:0px; width:100%; height:100%;" allowfullscreen></iframe>');
             }
             debugBase64(myImage)
             $('button')[0].hidden = false;
@@ -218,3 +222,38 @@ Function.prototype.bindToEventHandler = function bindToEventHandler() {
         handler.apply(this, boundParameters);
     }
 };
+
+const awaitLoading = () => new Promise((resolve) => {
+    const interval = setInterval(() => {
+        const slider = document.getElementById('slider');
+        if (slider) {
+            clearInterval(interval);
+            resolve();
+        }
+    }, 50);
+});
+
+const a = async () => {
+    await awaitLoading();
+    console.log('AAAAAAAAAAA');
+    const slider = document.getElementById('slider');
+    jQuery.makeArray(slider.children).forEach((node) => {
+        node.addEventListener('click', getImageFromSlider);
+    });
+};
+
+a();
+
+const getImageFromSlider = (event) => {
+    console.log('aaaaa', event)
+    const elem = document.createElement('img');
+    elem.src = event.target.attributes[0].value;
+    elem.className = 'imgElement';
+    $('#field')[0].appendChild(elem);
+
+    $(elem).attr("draggable", "false");
+
+    // attach the mousedown event to all image tags
+    $(elem).mousedown(startDragging);
+    event.preventDefault();
+}
