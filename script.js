@@ -64,8 +64,8 @@ function whileDragging(e) {
         // for moving, dragging the image moves it to to the new coordinates
 
         // offset the new drag coordinates (by half the image height)
-        var newY = e.pageY - 150;
-        var newX = e.pageX - 150;
+        var newY = e.pageY - 275;
+        var newX = e.pageX - 275;
 
         // adjust the x and y values of the currently being dragged image
         currentlyDragging.css({ "margin-top": newY + "px", "margin-left": newX + "px" });
@@ -154,9 +154,21 @@ async function droppedImage() {
             //img.file = file;
             imgel.src = img;
             imgel.className = 'imgElement';
-            $('#field')[0].appendChild(imgel);
+            $('.mainContainer')[0].appendChild(imgel);
 
             $(imgel).attr("draggable", "false");
+
+            var buttonForTab = document.createElement("button");
+            buttonForTab.className = "buttonImg";
+            buttonForTab.onclick = getImageFromSlider;
+            var imgForTab = document.createElement("img");
+            imgForTab.src = img;
+            imgForTab.className = 'tabElement';
+            buttonForTab.appendChild(imgForTab);
+
+            $('#slider')[0].appendChild(buttonForTab);
+
+
 
             // attach the mousedown event to all image tags
             $(imgel).mousedown(startDragging);
@@ -184,10 +196,8 @@ const getCollage = () => {
     $('.toolbar')[0].hidden = true;
     $('#slider')[0].hidden = true;
     
-    html2canvas(document.getElementById("field"), {
+    html2canvas(document.getElementById("mainContainer"), {
         onrendered: function (canvas) {
-            canvas.width =  1000
-            canvas.height =  1000
             var myImage = canvas.toDataURL("image/png");
             const debugBase64 = (base64URL) => {
                 let newlink = document.createElement('a');
@@ -241,7 +251,7 @@ const getImageFromSlider = (event) => {
     const elem = document.createElement('img');
     elem.src = event.target.attributes[0].value;
     elem.className = 'imgElement';
-    $('#field')[0].appendChild(elem);
+    $('.mainContainer')[0].appendChild(elem);
 
     $(elem).attr("draggable", "false");
 
