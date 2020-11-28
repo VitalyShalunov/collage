@@ -165,31 +165,18 @@ async function droppedImage() {
         alert("Ошибка HTTP: " + response.status);
     }
 
-    // for (var i = 0; i < files.length; i++) {
-    //     var file = files[i];
-    //     var reader = new FileReader();
-
-    //     //attach event handlers here...
-    //     reader.readAsDataURL(file);
-
-    //     reader.addEventListener('loadend', function (e, file) {
-    //         var bin = this.result;
-    //         var img = document.createElement("img");
-    //         img.file = file;
-    //         img.src = bin;
-    //         document.body.appendChild(img);
-
-    //         $(img).attr("draggable", "false");
-
-    //         // attach the mousedown event to all image tags
-    //         $(img).mousedown(startDragging);
-
-
-    //     }.bindToEventHandler(file), false);
-    // }
-
     return false;
 }
+
+
+function deleteImages() {
+    let url = 'https://boiling-hollows-10781.herokuapp.com/';
+    //let url = 'http://localhost:3000/';
+    return fetch(url, {
+        method: 'DELETE',
+    }).then(response => response.json())
+}
+
 
 const getCollage = () => {
     console.log($('#slider'))
@@ -197,12 +184,18 @@ const getCollage = () => {
     $('.toolbar')[0].hidden = true;
     $('#slider')[0].hidden = true;
     
-    html2canvas(document.getElementsByTagName("body"), {
+    html2canvas(document.getElementById("field"), {
         onrendered: function (canvas) {
+            canvas.width =  1000
+            canvas.height =  1000
             var myImage = canvas.toDataURL("image/png");
             const debugBase64 = (base64URL) => {
-                var win = window.open();
-                win.document.write('<iframe src="' + base64URL  + '" frameborder="0" style="border:0; top:0px; left:0px; bottom:0px; right:0px; width:100%; height:100%;" allowfullscreen></iframe>');
+                let newlink = document.createElement('a');
+                newlink.setAttribute('download', 'collage.png');
+                newlink.setAttribute('href', base64URL);
+                newlink.setAttribute('id', 'download');
+                $('body')[0].appendChild(newlink)
+                $('#download')[0].click()
             }
             debugBase64(myImage)
             $('button')[0].hidden = false;
@@ -245,7 +238,6 @@ const a = async () => {
 a();
 
 const getImageFromSlider = (event) => {
-    console.log('aaaaa', event)
     const elem = document.createElement('img');
     elem.src = event.target.attributes[0].value;
     elem.className = 'imgElement';
